@@ -1,6 +1,10 @@
 # ose-grpc
 
-A standardized gRPC server module for Go microservices. Designed to work beautifully with your own tracing setup (e.g. `ose-micro`), metrics, recovery, and structured logging.
+> A standardized gRPC server module for Go microservices. Designed to work beautifully with your own tracing setup (e.g. `ose-micro`), metrics, recovery, and structured logging.
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/ose-micro/grpc.svg)](https://pkg.go.dev/github.com/ose-micro/grpc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ose-micro/grpc)](https://goreportcard.com/report/github.com/ose-micro/grpc)
+[![License](https://img.shields.io/github/license/ose-micro/grpc)](LICENSE)
 
 ## ✨ Features
 
