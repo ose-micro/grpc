@@ -24,6 +24,10 @@ type Server struct {
 	tracer     tracing.Tracer
 }
 
+func (s Server) Server() *grpc.Server {
+	return s.grpcServer
+}
+
 func (s Server) Serve(lis net.Listener, RegisterFn func(*grpc.Server)) error {
 	// // Register health check
 	healthSrv := health.NewServer()
