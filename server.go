@@ -1,7 +1,6 @@
 package grpc
 
 import (
-	"fmt"
 	"net"
 
 	"github.com/ose-micro/core/logger"
@@ -13,44 +12,54 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-type Param struct {
+type Params struct {
 	Middlewares []grpc.ServerOption
-	RegisterFn  func(*grpc.Server)
 	Logger      logger.Logger
 	Tracer      tracing.Tracer
 }
 
-func StartServer(conf Config, param Param) error {
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.Port))
-	if err != nil {
-		return fmt.Errorf("failed to listen on port %d: %w", conf.Port, err)
-	}
+type Server struct {
+	grpcServer *grpc.Server
+	log        logger.Logger
+	tracer     tracing.Tracer
+}
 
-	middlewares := param.Middlewares
-	if param.Logger != nil {
+func (s Server) Serve(lis net.Listener, RegisterFn func(*grpc.Server)) error {
+	// // Register health check
+	healthSrv := health.NewServer()
+	healthpb.RegisterHealthServer(s.grpcServer, healthSrv)
+
+	// // Register reflection
+	reflection.Register(s.grpcServer)
+
+	// // Register actual services
+	RegisterFn(s.grpcServer)
+	return s.grpcServer.Serve(lis)
+}
+
+func (s Server) Stop() error {
+	s.grpcServer.GracefulStop()
+	s.log.Info("gRPC server stopped")
+	return nil
+}
+
+func New(params Params) (*Server, error) {
+	middlewares := params.Middlewares
+	if params.Logger != nil {
 		middlewares = append(middlewares, grpc.ChainUnaryInterceptor(
-			interceptors.LoggingInterceptor(param.Logger),
-			interceptors.RecoveryInterceptor(param.Logger),
-			WithTracing(param.Tracer),
+			interceptors.LoggingInterceptor(params.Logger),
+			interceptors.RecoveryInterceptor(params.Logger),
+			WithTracing(params.Tracer),
 		))
 		middlewares = append(middlewares, grpc.StreamInterceptor(
-			WithStreamTracing(param.Tracer),
+			WithStreamTracing(params.Tracer),
 		))
 	}
-	
+
 	grpcServer := grpc.NewServer(middlewares...)
-
-	// Register health check
-	healthSrv := health.NewServer()
-	healthpb.RegisterHealthServer(grpcServer, healthSrv)
-
-	// Register reflection
-	reflection.Register(grpcServer)
-
-	// Register actual services
-	param.RegisterFn(grpcServer)
-
-	param.Logger.Info(fmt.Sprintf("Server started on port: %d", conf.Port))
-
-	return grpcServer.Serve(listener)
+	return &Server{
+		grpcServer: grpcServer,
+		log:        params.Logger,
+		tracer:     params.Tracer,
+	}, nil
 }
