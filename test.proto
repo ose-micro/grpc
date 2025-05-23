@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package grpc.test;
+
+option go_package = "./go_gen;go_gen";
+
+service TestService {
+  rpc Ping(Empty) returns (Pong);
+}
+
+message Empty {}
+
+message Pong {
+  string msg = 1;
+}

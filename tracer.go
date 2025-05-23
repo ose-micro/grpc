@@ -1,6 +1,11 @@
 package grpc
 
-import "github.com/ose-micro/core"
+import (
+	"context"
+
+	"github.com/ose-micro/core/tracing"
+	"google.golang.org/grpc"
+)
 
 func WithTracing(tracer tracing.Tracer) grpc.UnaryServerInterceptor {
 	return func(
