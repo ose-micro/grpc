@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/ose-micro/core/tracing"
@@ -17,5 +16,3 @@ func DefaultMiddlewares(logger *zap.Logger, tracer tracing.Tracer) []grpc.UnaryS
 		grpc_zap.UnaryServerInterceptor(logger),
 	}
 }
-
-

@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-
 func WithStreamTracing(tracer tracing.Tracer) grpc.StreamServerInterceptor {
 	return func(
 		srv interface{},

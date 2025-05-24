@@ -1,6 +1,6 @@
 package client
 
 type Config struct {
-	Target string
+	Target   string
 	Insecure bool
 }
