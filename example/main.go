@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 
 	"github.com/ose-micro/core/logger"
@@ -39,4 +40,10 @@ func main() {
 	}); err != nil {
 		logger.Fatal("gRPC server failed", zap.Error(err))
 	}
+	
+	defer func() {
+		if err := tracer.Shutdown(context.Background()); err != nil {
+			logger.Error("Error shutting down tracer provider: %v", err)
+		}
+	}()
 }

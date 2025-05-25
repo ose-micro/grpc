@@ -32,7 +32,6 @@ if err := ose_grpc.StartServer(ose_grpc.Config{
 		Port: 50051,
 	},ose_grpc.Param{
 		RegisterFn: func(s *grpc.Server) {
-			log.Println("Inside register")
 			// pb.RegisterYourServiceServer(s, &YourService{})
 		},
 		Logger: logger,
@@ -41,3 +40,12 @@ if err := ose_grpc.StartServer(ose_grpc.Config{
     logger.Fatal(err)
 }
 ```
+---
+
+## License
+
+MIT License
+
+---
+
+© 2025 Moriba
