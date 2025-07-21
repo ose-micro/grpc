@@ -13,57 +13,71 @@ import (
 )
 
 type Params struct {
-	Middlewares []grpc.ServerOption
-	Logger      logger.Logger
-	Tracer      tracing.Tracer
+	UnaryInterceptors  []grpc.UnaryServerInterceptor
+	StreamInterceptors []grpc.StreamServerInterceptor
+	Logger             logger.Logger
+	Tracer             tracing.Tracer
 }
 
 type Server struct {
 	grpcServer *grpc.Server
 	log        logger.Logger
-	tracer     tracing.Tracer
-}
-
-func (s Server) Server() *grpc.Server {
-	return s.grpcServer
-}
-
-func (s Server) Serve(lis net.Listener, RegisterFn func(*grpc.Server)) error {
-	// // Register health check
-	healthSrv := health.NewServer()
-	healthpb.RegisterHealthServer(s.grpcServer, healthSrv)
-
-	// // Register reflection
-	reflection.Register(s.grpcServer)
-
-	// // Register actual services
-	RegisterFn(s.grpcServer)
-	return s.grpcServer.Serve(lis)
-}
-
-func (s Server) Stop() error {
-	s.grpcServer.GracefulStop()
-	s.log.Info("gRPC server stopped")
-	return nil
 }
 
 func New(params Params) (*Server, error) {
-	middlewares := params.Middlewares
+	var unaryInts []grpc.UnaryServerInterceptor
+	var streamInts []grpc.StreamServerInterceptor
+
+	// Default interceptors
 	if params.Logger != nil {
-		middlewares = append(middlewares, grpc.ChainUnaryInterceptor(
+		unaryInts = append(unaryInts,
 			interceptors.LoggingInterceptor(params.Logger),
 			interceptors.RecoveryInterceptor(params.Logger),
-			WithTracing(params.Tracer),
-		))
-		middlewares = append(middlewares, grpc.StreamInterceptor(
-			WithStreamTracing(params.Tracer),
-		))
+		)
+	}
+	if params.Tracer != nil {
+		unaryInts = append(unaryInts, WithTracing(params.Tracer))
+		streamInts = append(streamInts, WithStreamTracing(params.Tracer))
 	}
 
-	grpcServer := grpc.NewServer(middlewares...)
+	// Append user-defined interceptors
+	unaryInts = append(unaryInts, params.UnaryInterceptors...)
+	streamInts = append(streamInts, params.StreamInterceptors...)
+
+	opts := []grpc.ServerOption{
+		grpc.ChainUnaryInterceptor(unaryInts...),
+		grpc.ChainStreamInterceptor(streamInts...),
+	}
+
+	grpcServer := grpc.NewServer(opts...)
+
 	return &Server{
 		grpcServer: grpcServer,
 		log:        params.Logger,
-		tracer:     params.Tracer,
 	}, nil
+}
+
+func (s *Server) Serve(lis net.Listener, registerFn func(*grpc.Server)) error {
+	// Register built-in services
+	healthSrv := health.NewServer()
+	healthpb.RegisterHealthServer(s.grpcServer, healthSrv)
+	reflection.Register(s.grpcServer)
+
+	// Register application services
+	registerFn(s.grpcServer)
+
+	s.log.Info("gRPC server started", "addr", lis.Addr().String())
+	return s.grpcServer.Serve(lis)
+}
+
+func (s *Server) Stop() error {
+	if s.grpcServer != nil {
+		s.grpcServer.GracefulStop()
+		s.log.Info("gRPC server stopped")
+	}
+	return nil
+}
+
+func (s *Server) Instance() *grpc.Server {
+	return s.grpcServer
 }

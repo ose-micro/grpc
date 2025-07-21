@@ -200,55 +200,6 @@ func (SortOrder) EnumDescriptor() ([]byte, []int) {
 	return file_common_v1_common_proto_rawDescGZIP(), []int{2}
 }
 
-type QueryType int32
-
-const (
-	QueryType_TYPE_UNSPECIFIED QueryType = 0
-	QueryType_RECORD           QueryType = 1
-	QueryType_SUMMARY          QueryType = 2
-)
-
-// Enum value maps for QueryType.
-var (
-	QueryType_name = map[int32]string{
-		0: "TYPE_UNSPECIFIED",
-		1: "RECORD",
-		2: "SUMMARY",
-	}
-	QueryType_value = map[string]int32{
-		"TYPE_UNSPECIFIED": 0,
-		"RECORD":           1,
-		"SUMMARY":          2,
-	}
-)
-
-func (x QueryType) Enum() *QueryType {
-	p := new(QueryType)
-	*p = x
-	return p
-}
-
-func (x QueryType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (QueryType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_common_proto_enumTypes[3].Descriptor()
-}
-
-func (QueryType) Type() protoreflect.EnumType {
-	return &file_common_v1_common_proto_enumTypes[3]
-}
-
-func (x QueryType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use QueryType.Descriptor instead.
-func (QueryType) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_common_proto_rawDescGZIP(), []int{3}
-}
-
 type ComputedOperator int32
 
 const (
@@ -318,11 +269,11 @@ func (x ComputedOperator) String() string {
 }
 
 func (ComputedOperator) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_common_proto_enumTypes[4].Descriptor()
+	return file_common_v1_common_proto_enumTypes[3].Descriptor()
 }
 
 func (ComputedOperator) Type() protoreflect.EnumType {
-	return &file_common_v1_common_proto_enumTypes[4]
+	return &file_common_v1_common_proto_enumTypes[3]
 }
 
 func (x ComputedOperator) Number() protoreflect.EnumNumber {
@@ -331,7 +282,7 @@ func (x ComputedOperator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ComputedOperator.Descriptor instead.
 func (ComputedOperator) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_common_proto_rawDescGZIP(), []int{4}
+	return file_common_v1_common_proto_rawDescGZIP(), []int{3}
 }
 
 type Filter struct {
@@ -569,14 +520,13 @@ func (x *ComputedField) GetOperands() []string {
 type FacetQuery struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Type           QueryType              `protobuf:"varint,2,opt,name=type,proto3,enum=common.v1.QueryType" json:"type,omitempty"`
-	Filters        []*Filter              `protobuf:"bytes,3,rep,name=filters,proto3" json:"filters,omitempty"`
-	GroupBy        []string               `protobuf:"bytes,4,rep,name=group_by,json=groupBy,proto3" json:"group_by,omitempty"`
-	Aggregations   []*Aggregation         `protobuf:"bytes,5,rep,name=aggregations,proto3" json:"aggregations,omitempty"`
-	Sort           []*SortOption          `protobuf:"bytes,6,rep,name=sort,proto3" json:"sort,omitempty"`
-	ComputedFields []*ComputedField       `protobuf:"bytes,7,rep,name=computed_fields,json=computedFields,proto3" json:"computed_fields,omitempty"`
-	Skip           int64                  `protobuf:"varint,8,opt,name=skip,proto3" json:"skip,omitempty"`
-	Limit          int64                  `protobuf:"varint,9,opt,name=limit,proto3" json:"limit,omitempty"`
+	Filters        []*Filter              `protobuf:"bytes,2,rep,name=filters,proto3" json:"filters,omitempty"`
+	GroupBy        []string               `protobuf:"bytes,3,rep,name=group_by,json=groupBy,proto3" json:"group_by,omitempty"`
+	Aggregations   []*Aggregation         `protobuf:"bytes,4,rep,name=aggregations,proto3" json:"aggregations,omitempty"`
+	Sort           []*SortOption          `protobuf:"bytes,5,rep,name=sort,proto3" json:"sort,omitempty"`
+	ComputedFields []*ComputedField       `protobuf:"bytes,6,rep,name=computed_fields,json=computedFields,proto3" json:"computed_fields,omitempty"`
+	Skip           int64                  `protobuf:"varint,7,opt,name=skip,proto3" json:"skip,omitempty"`
+	Limit          int64                  `protobuf:"varint,8,opt,name=limit,proto3" json:"limit,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -616,13 +566,6 @@ func (x *FacetQuery) GetName() string {
 		return x.Name
 	}
 	return ""
-}
-
-func (x *FacetQuery) GetType() QueryType {
-	if x != nil {
-		return x.Type
-	}
-	return QueryType_TYPE_UNSPECIFIED
 }
 
 func (x *FacetQuery) GetFilters() []*Filter {
@@ -764,8 +707,7 @@ func (x *Result) GetData() map[string]*structpb.Value {
 
 type Summary struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Id            string                     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Fields        map[string]*structpb.Value `protobuf:"bytes,2,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Records       map[string]*structpb.Value `protobuf:"bytes,1,rep,name=records,proto3" json:"records,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -800,16 +742,9 @@ func (*Summary) Descriptor() ([]byte, []int) {
 	return file_common_v1_common_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *Summary) GetId() string {
+func (x *Summary) GetRecords() map[string]*structpb.Value {
 	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *Summary) GetFields() map[string]*structpb.Value {
-	if x != nil {
-		return x.Fields
+		return x.Records
 	}
 	return nil
 }
@@ -878,29 +813,27 @@ const file_common_v1_common_proto_rawDesc = "" +
 	"\rComputedField\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x127\n" +
 	"\boperator\x18\x02 \x01(\x0e2\x1b.common.v1.ComputedOperatorR\boperator\x12\x1a\n" +
-	"\boperands\x18\x03 \x03(\tR\boperands\"\xe6\x02\n" +
+	"\boperands\x18\x03 \x03(\tR\boperands\"\xbc\x02\n" +
 	"\n" +
 	"FacetQuery\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12(\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x14.common.v1.QueryTypeR\x04type\x12+\n" +
-	"\afilters\x18\x03 \x03(\v2\x11.common.v1.FilterR\afilters\x12\x19\n" +
-	"\bgroup_by\x18\x04 \x03(\tR\agroupBy\x12:\n" +
-	"\faggregations\x18\x05 \x03(\v2\x16.common.v1.AggregationR\faggregations\x12)\n" +
-	"\x04sort\x18\x06 \x03(\v2\x15.common.v1.SortOptionR\x04sort\x12A\n" +
-	"\x0fcomputed_fields\x18\a \x03(\v2\x18.common.v1.ComputedFieldR\x0ecomputedFields\x12\x12\n" +
-	"\x04skip\x18\b \x01(\x03R\x04skip\x12\x14\n" +
-	"\x05limit\x18\t \x01(\x03R\x05limit\"8\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12+\n" +
+	"\afilters\x18\x02 \x03(\v2\x11.common.v1.FilterR\afilters\x12\x19\n" +
+	"\bgroup_by\x18\x03 \x03(\tR\agroupBy\x12:\n" +
+	"\faggregations\x18\x04 \x03(\v2\x16.common.v1.AggregationR\faggregations\x12)\n" +
+	"\x04sort\x18\x05 \x03(\v2\x15.common.v1.SortOptionR\x04sort\x12A\n" +
+	"\x0fcomputed_fields\x18\x06 \x03(\v2\x18.common.v1.ComputedFieldR\x0ecomputedFields\x12\x12\n" +
+	"\x04skip\x18\a \x01(\x03R\x04skip\x12\x14\n" +
+	"\x05limit\x18\b \x01(\x03R\x05limit\"8\n" +
 	"\aRequest\x12-\n" +
 	"\x06facets\x18\x01 \x03(\v2\x15.common.v1.FacetQueryR\x06facets\"\x8a\x01\n" +
 	"\x06Result\x12/\n" +
 	"\x04data\x18\x01 \x03(\v2\x1b.common.v1.Result.DataEntryR\x04data\x1aO\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
-	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"\xa4\x01\n" +
-	"\aSummary\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x126\n" +
-	"\x06fields\x18\x02 \x03(\v2\x1e.common.v1.Summary.FieldsEntryR\x06fields\x1aQ\n" +
-	"\vFieldsEntry\x12\x10\n" +
+	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"\x98\x01\n" +
+	"\aSummary\x129\n" +
+	"\arecords\x18\x01 \x03(\v2\x1f.common.v1.Summary.RecordsEntryR\arecords\x1aR\n" +
+	"\fRecordsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
 	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"9\n" +
 	"\tSummaries\x12,\n" +
@@ -926,12 +859,7 @@ const file_common_v1_common_proto_rawDesc = "" +
 	"\tSortOrder\x12\x14\n" +
 	"\x10SORT_UNSPECIFIED\x10\x00\x12\a\n" +
 	"\x03ASC\x10\x01\x12\b\n" +
-	"\x04DESC\x10\x02*:\n" +
-	"\tQueryType\x12\x14\n" +
-	"\x10TYPE_UNSPECIFIED\x10\x00\x12\n" +
-	"\n" +
-	"\x06RECORD\x10\x01\x12\v\n" +
-	"\aSUMMARY\x10\x02*\xda\x01\n" +
+	"\x04DESC\x10\x02*\xda\x01\n" +
 	"\x10ComputedOperator\x12\x13\n" +
 	"\x0fOCP_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bMULTIPLY\x10\x01\x12\a\n" +
@@ -968,48 +896,46 @@ func file_common_v1_common_proto_rawDescGZIP() []byte {
 	return file_common_v1_common_proto_rawDescData
 }
 
-var file_common_v1_common_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
+var file_common_v1_common_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_common_v1_common_proto_goTypes = []any{
 	(FilterOp)(0),          // 0: common.v1.FilterOp
 	(AggregationType)(0),   // 1: common.v1.AggregationType
 	(SortOrder)(0),         // 2: common.v1.SortOrder
-	(QueryType)(0),         // 3: common.v1.QueryType
-	(ComputedOperator)(0),  // 4: common.v1.ComputedOperator
-	(*Filter)(nil),         // 5: common.v1.Filter
-	(*Aggregation)(nil),    // 6: common.v1.Aggregation
-	(*SortOption)(nil),     // 7: common.v1.SortOption
-	(*ComputedField)(nil),  // 8: common.v1.ComputedField
-	(*FacetQuery)(nil),     // 9: common.v1.FacetQuery
-	(*Request)(nil),        // 10: common.v1.Request
-	(*Result)(nil),         // 11: common.v1.Result
-	(*Summary)(nil),        // 12: common.v1.Summary
-	(*Summaries)(nil),      // 13: common.v1.Summaries
-	nil,                    // 14: common.v1.Result.DataEntry
-	nil,                    // 15: common.v1.Summary.FieldsEntry
-	(*structpb.Value)(nil), // 16: google.protobuf.Value
+	(ComputedOperator)(0),  // 3: common.v1.ComputedOperator
+	(*Filter)(nil),         // 4: common.v1.Filter
+	(*Aggregation)(nil),    // 5: common.v1.Aggregation
+	(*SortOption)(nil),     // 6: common.v1.SortOption
+	(*ComputedField)(nil),  // 7: common.v1.ComputedField
+	(*FacetQuery)(nil),     // 8: common.v1.FacetQuery
+	(*Request)(nil),        // 9: common.v1.Request
+	(*Result)(nil),         // 10: common.v1.Result
+	(*Summary)(nil),        // 11: common.v1.Summary
+	(*Summaries)(nil),      // 12: common.v1.Summaries
+	nil,                    // 13: common.v1.Result.DataEntry
+	nil,                    // 14: common.v1.Summary.RecordsEntry
+	(*structpb.Value)(nil), // 15: google.protobuf.Value
 }
 var file_common_v1_common_proto_depIdxs = []int32{
 	0,  // 0: common.v1.Filter.op:type_name -> common.v1.FilterOp
 	1,  // 1: common.v1.Aggregation.type:type_name -> common.v1.AggregationType
 	2,  // 2: common.v1.SortOption.order:type_name -> common.v1.SortOrder
-	4,  // 3: common.v1.ComputedField.operator:type_name -> common.v1.ComputedOperator
-	3,  // 4: common.v1.FacetQuery.type:type_name -> common.v1.QueryType
-	5,  // 5: common.v1.FacetQuery.filters:type_name -> common.v1.Filter
-	6,  // 6: common.v1.FacetQuery.aggregations:type_name -> common.v1.Aggregation
-	7,  // 7: common.v1.FacetQuery.sort:type_name -> common.v1.SortOption
-	8,  // 8: common.v1.FacetQuery.computed_fields:type_name -> common.v1.ComputedField
-	9,  // 9: common.v1.Request.facets:type_name -> common.v1.FacetQuery
-	14, // 10: common.v1.Result.data:type_name -> common.v1.Result.DataEntry
-	15, // 11: common.v1.Summary.fields:type_name -> common.v1.Summary.FieldsEntry
-	12, // 12: common.v1.Summaries.records:type_name -> common.v1.Summary
-	16, // 13: common.v1.Result.DataEntry.value:type_name -> google.protobuf.Value
-	16, // 14: common.v1.Summary.FieldsEntry.value:type_name -> google.protobuf.Value
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	3,  // 3: common.v1.ComputedField.operator:type_name -> common.v1.ComputedOperator
+	4,  // 4: common.v1.FacetQuery.filters:type_name -> common.v1.Filter
+	5,  // 5: common.v1.FacetQuery.aggregations:type_name -> common.v1.Aggregation
+	6,  // 6: common.v1.FacetQuery.sort:type_name -> common.v1.SortOption
+	7,  // 7: common.v1.FacetQuery.computed_fields:type_name -> common.v1.ComputedField
+	8,  // 8: common.v1.Request.facets:type_name -> common.v1.FacetQuery
+	13, // 9: common.v1.Result.data:type_name -> common.v1.Result.DataEntry
+	14, // 10: common.v1.Summary.records:type_name -> common.v1.Summary.RecordsEntry
+	11, // 11: common.v1.Summaries.records:type_name -> common.v1.Summary
+	15, // 12: common.v1.Result.DataEntry.value:type_name -> google.protobuf.Value
+	15, // 13: common.v1.Summary.RecordsEntry.value:type_name -> google.protobuf.Value
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_common_v1_common_proto_init() }
@@ -1022,7 +948,7 @@ func file_common_v1_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_common_proto_rawDesc), len(file_common_v1_common_proto_rawDesc)),
-			NumEnums:      5,
+			NumEnums:      4,
 			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,

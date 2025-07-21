@@ -36,12 +36,6 @@ enum SortOrder {
   DESC = 2;
 }
 
-enum QueryType {
-  TYPE_UNSPECIFIED = 0;
-  RECORD = 1;
-  SUMMARY = 2;
-}
-
 enum ComputedOperator {
   OCP_UNSPECIFIED = 0;
   MULTIPLY = 1;
@@ -85,14 +79,13 @@ message ComputedField {
 
 message FacetQuery {
   string name = 1;
-  QueryType type = 2;
-  repeated Filter filters = 3;
-  repeated string group_by = 4;
-  repeated Aggregation aggregations = 5;
-  repeated SortOption sort = 6;
-  repeated ComputedField computed_fields = 7;
-  int64 skip = 8;
-  int64 limit = 9;
+  repeated Filter filters = 2;
+  repeated string group_by = 3;
+  repeated Aggregation aggregations = 4;
+  repeated SortOption sort = 5;
+  repeated ComputedField computed_fields = 6;
+  int64 skip = 7;
+  int64 limit = 8;
 }
 
 message Request {
@@ -104,8 +97,7 @@ message Result {
 }
 
 message Summary {
-  string id = 1;
-  map<string, google.protobuf.Value> fields = 2;
+  map<string, google.protobuf.Value> records = 1;
 }
 
 message Summaries {
