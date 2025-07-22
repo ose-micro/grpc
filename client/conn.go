@@ -17,7 +17,6 @@ import (
 	"google.golang.org/grpc/resolver"
 	"google.golang.org/grpc/resolver/dns"
 )
-
 func New(conf Config, log logger.Logger, tracer tracing.Tracer) (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
 
@@ -84,6 +83,16 @@ func New(conf Config, log logger.Logger, tracer tracing.Tracer) (*grpc.ClientCon
 	return grpc.DialContext(ctx, conf.Target, opts...)
 }
 
+// WithCallContext returns a new context with a timeout for a single RPC call.
+func WithCallContext(conf Config) (context.Context, context.CancelFunc) {
+	timeout := 5 * time.Second // default if not set
+	if conf.CallTimeoutSec > 0 {
+		timeout = time.Duration(conf.CallTimeoutSec) * time.Second
+	}
+	return context.WithTimeout(context.Background(), timeout)
+}
+
+// loadTLSCredentials loads client TLS config
 func loadTLSCredentials(conf Config) (credentials.TransportCredentials, error) {
 	if conf.TLSCertPath == "" {
 		return credentials.NewClientTLSFromCert(nil, conf.Authority), nil
@@ -101,7 +110,7 @@ func loadTLSCredentials(conf Config) (credentials.TransportCredentials, error) {
 
 	cfg := &tls.Config{
 		RootCAs:    cp,
-		ServerName: conf.Authority, // override SNI
+		ServerName: conf.Authority,
 	}
 
 	return credentials.NewTLS(cfg), nil

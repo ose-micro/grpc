@@ -8,4 +8,5 @@ type Config struct {
 	TimeoutSec   int    // timeout per dial in seconds
 	EnableRetry  bool   // enable gRPC built-in retry
 	ServiceName  string // optional: for load balancing with xDS or DNS
+	CallTimeoutSec int // per-RPC timeout
 }
