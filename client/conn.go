@@ -10,6 +10,7 @@ import (
 
 	"github.com/ose-micro/core/logger"
 	"github.com/ose-micro/core/tracing"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/balancer/roundrobin"
 	"google.golang.org/grpc/credentials"
@@ -17,7 +18,7 @@ import (
 	"google.golang.org/grpc/resolver"
 	"google.golang.org/grpc/resolver/dns"
 )
-func New(conf Config, log logger.Logger, tracer tracing.Tracer) (*grpc.ClientConn, error) {
+func newConn(conf Config, log logger.Logger, tracer tracing.Tracer) (*grpc.ClientConn, error) {
 	var opts []grpc.DialOption
 
 	// --- Security / Transport credentials ---
@@ -83,15 +84,6 @@ func New(conf Config, log logger.Logger, tracer tracing.Tracer) (*grpc.ClientCon
 	return grpc.DialContext(ctx, conf.Target, opts...)
 }
 
-// WithCallContext returns a new context with a timeout for a single RPC call.
-func WithCallContext(conf Config) (context.Context, context.CancelFunc) {
-	timeout := 5 * time.Second // default if not set
-	if conf.CallTimeoutSec > 0 {
-		timeout = time.Duration(conf.CallTimeoutSec) * time.Second
-	}
-	return context.WithTimeout(context.Background(), timeout)
-}
-
 // loadTLSCredentials loads client TLS config
 func loadTLSCredentials(conf Config) (credentials.TransportCredentials, error) {
 	if conf.TLSCertPath == "" {
@@ -114,4 +106,45 @@ func loadTLSCredentials(conf Config) (credentials.TransportCredentials, error) {
 	}
 
 	return credentials.NewTLS(cfg), nil
+}
+
+func MakeCall[C any](
+	parentCtx context.Context,
+	conf Config,
+	log logger.Logger,
+	tracer tracing.Tracer,
+	newClient func(*grpc.ClientConn) C,
+	fn func(ctx context.Context, client C) error,
+) error {
+	// Set default call timeout to 5 seconds if not set
+	timeout := 5 * time.Second
+	if conf.CallTimeoutSec > 0 {
+		timeout = time.Duration(conf.CallTimeoutSec) * time.Second
+	}
+
+	// Create context with timeout, derived from parentCtx if available
+	ctx := parentCtx
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	callCtx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	// Create gRPC client connection
+	conn, err := newConn(conf, log, tracer)
+	if err != nil {
+		log.Error("failed to create gRPC client", zap.Error(err))
+		return cleanGRPCError(err)
+	}
+	defer func() {
+		if cerr := conn.Close(); cerr != nil {
+			log.Error("failed to close gRPC client connection", zap.Error(cerr))
+		}
+	}()
+
+	// Create typed client from connection
+	client := newClient(conn)
+
+	// Execute the passed function with context and client
+	return fn(callCtx, client)
 }
