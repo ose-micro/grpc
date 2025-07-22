@@ -113,8 +113,8 @@ func MakeCall[C any](
 	conf Config,
 	log logger.Logger,
 	tracer tracing.Tracer,
-	newClient func(*grpc.ClientConn) C,
-	fn func(ctx context.Context, client C) error,
+	clientBuilder func(*grpc.ClientConn) C,
+	callFn func(context.Context, C) error,
 ) error {
 	// Set default call timeout to 5 seconds if not set
 	timeout := 5 * time.Second
@@ -143,8 +143,8 @@ func MakeCall[C any](
 	}()
 
 	// Create typed client from connection
-	client := newClient(conn)
+	client := clientBuilder(conn)
 
 	// Execute the passed function with context and client
-	return fn(callCtx, client)
+	return callFn(callCtx, client)
 }
