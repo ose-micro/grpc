@@ -8,6 +8,10 @@ gen:
 dep-update:
 	clear && buf dep update
 
+.PHONY: dep-lint
+dep-lint:
+	clear && buf lint
+
 .PHONY: dep-prune
 buf dep prune:
 	clear && buf dep prune

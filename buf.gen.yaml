@@ -12,5 +12,6 @@ plugins:
   - remote: buf.build/grpc/go
     out: gen/go
     opt: paths=source_relative
+
 inputs:
   - directory: protobufs

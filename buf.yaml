@@ -1,10 +1,10 @@
 version: v2
 modules:
   - path: protobufs
-    name: buf.build/moriba-sl/ose
+    name: buf.build/ose-micro/common
     lint:
       use:
-        - DEFAULT
+        - STANDARD
 
       disallow_comment_ignores: true
       enum_zero_value_suffix: _UNSPECIFIED
@@ -14,7 +14,7 @@ modules:
       service_suffix: Service
 lint:
   use:
-    - DEFAULT
+    - STANDARD
 breaking:
   use:
     - FILE
