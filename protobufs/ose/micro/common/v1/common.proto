@@ -15,3 +15,8 @@ message Reference {
   string id = 1;
   map<string, string> metadata = 2;
 }
+
+message Permission {
+  string resource = 1;
+  string action = 2;
+}

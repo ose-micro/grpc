@@ -141,6 +141,58 @@ func (x *Reference) GetMetadata() map[string]string {
 	return nil
 }
 
+type Permission struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Resource      string                 `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	Action        string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Permission) Reset() {
+	*x = Permission{}
+	mi := &file_ose_micro_common_v1_common_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Permission) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Permission) ProtoMessage() {}
+
+func (x *Permission) ProtoReflect() protoreflect.Message {
+	mi := &file_ose_micro_common_v1_common_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Permission.ProtoReflect.Descriptor instead.
+func (*Permission) Descriptor() ([]byte, []int) {
+	return file_ose_micro_common_v1_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Permission) GetResource() string {
+	if x != nil {
+		return x.Resource
+	}
+	return ""
+}
+
+func (x *Permission) GetAction() string {
+	if x != nil {
+		return x.Action
+	}
+	return ""
+}
+
 var File_ose_micro_common_v1_common_proto protoreflect.FileDescriptor
 
 const file_ose_micro_common_v1_common_proto_rawDesc = "" +
@@ -156,7 +208,11 @@ const file_ose_micro_common_v1_common_proto_rawDesc = "" +
 	"\bmetadata\x18\x02 \x03(\v2,.ose.micro.common.v1.Reference.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xd4\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"@\n" +
+	"\n" +
+	"Permission\x12\x1a\n" +
+	"\bresource\x18\x01 \x01(\tR\bresource\x12\x16\n" +
+	"\x06action\x18\x02 \x01(\tR\x06actionB\xd4\x01\n" +
 	"\x17com.ose.micro.common.v1B\vCommonProtoP\x01Z=github.com/ose-micro/grpc/gen/go/ose/micro/common/v1;commonv1\xa2\x02\x03OMC\xaa\x02\x13Ose.Micro.Common.V1\xca\x02\x13Ose\\Micro\\Common\\V1\xe2\x02\x1fOse\\Micro\\Common\\V1\\GPBMetadata\xea\x02\x16Ose::Micro::Common::V1b\x06proto3"
 
 var (
@@ -171,14 +227,15 @@ func file_ose_micro_common_v1_common_proto_rawDescGZIP() []byte {
 	return file_ose_micro_common_v1_common_proto_rawDescData
 }
 
-var file_ose_micro_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_ose_micro_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ose_micro_common_v1_common_proto_goTypes = []any{
-	(*Location)(nil),  // 0: ose.micro.common.v1.Location
-	(*Reference)(nil), // 1: ose.micro.common.v1.Reference
-	nil,               // 2: ose.micro.common.v1.Reference.MetadataEntry
+	(*Location)(nil),   // 0: ose.micro.common.v1.Location
+	(*Reference)(nil),  // 1: ose.micro.common.v1.Reference
+	(*Permission)(nil), // 2: ose.micro.common.v1.Permission
+	nil,                // 3: ose.micro.common.v1.Reference.MetadataEntry
 }
 var file_ose_micro_common_v1_common_proto_depIdxs = []int32{
-	2, // 0: ose.micro.common.v1.Reference.metadata:type_name -> ose.micro.common.v1.Reference.MetadataEntry
+	3, // 0: ose.micro.common.v1.Reference.metadata:type_name -> ose.micro.common.v1.Reference.MetadataEntry
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -197,7 +254,7 @@ func file_ose_micro_common_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_common_v1_common_proto_rawDesc), len(file_ose_micro_common_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
