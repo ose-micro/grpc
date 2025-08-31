@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package ose.micro.auth.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ose-micro/grpc/gen/go/ose/micro/auth/v1;authv1";
+
+enum TokenKind {
+  TokenKind_Undefined = 0;
+  TokenKind_AccessToken = 1;
+  TokenKind_PurposeToken = 3;
+}
+
+message Permission {
+  string resource = 1;
+  string action = 2;
+}
+
+message Tenant {
+  string role = 1;
+  string tenant = 2;
+  repeated Permission permissions = 3;
+}
+
+message Claims {
+  string sub = 1;
+  TokenKind kind = 2;
+  repeated Tenant tenants = 3;
+  string jti = 4;
+  string Issuer = 5;
+  google.protobuf.Timestamp expires_at = 6;
+  google.protobuf.Timestamp issued_at = 7;
+}
+
+message Auth {
+  string access = 1;
+  string refresh = 2;
+}

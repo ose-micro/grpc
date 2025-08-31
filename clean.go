@@ -7,7 +7,6 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-// convertToStruct converts map[string]interface{} to *structpb.Struct
 func ConvertToStruct(data map[string]interface{}) (*structpb.Struct, error) {
 	fields, err := ConvertToValue(data)
 	if err != nil {
