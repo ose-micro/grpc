@@ -1,14 +1,16 @@
 syntax = "proto3";
 
-package ose.micro.auth.v1;
+package ose.micro.common.v1;
 
 import "google/protobuf/timestamp.proto";
+import "ose/micro/common/v1/common.proto";
 
-option go_package = "github.com/ose-micro/grpc/gen/go/ose/micro/auth/v1;authv1";
+option go_package = "github.com/ose-micro/grpc/gen/go/ose/micro/common/v1;commonv1";
 
 enum TokenKind {
   TokenKind_Undefined = 0;
   TokenKind_AccessToken = 1;
+  TokenKind_RefreshToken = 2;
   TokenKind_PurposeToken = 3;
 }
 

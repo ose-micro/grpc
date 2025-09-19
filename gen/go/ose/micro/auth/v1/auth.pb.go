@@ -2,11 +2,12 @@
 // versions:
 // 	protoc-gen-go v1.36.8
 // 	protoc        (unknown)
-// source: ose/micro/auth/v1/auth.proto
+// source: ose/micro/auth/v1/claims.proto
 
 package authv1
 
 import (
+	v1 "github.com/ose-micro/grpc/gen/go/ose/micro/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -27,6 +28,7 @@ type TokenKind int32
 const (
 	TokenKind_TokenKind_Undefined    TokenKind = 0
 	TokenKind_TokenKind_AccessToken  TokenKind = 1
+	TokenKind_TokenKind_RefreshToken TokenKind = 2
 	TokenKind_TokenKind_PurposeToken TokenKind = 3
 )
 
@@ -35,11 +37,13 @@ var (
 	TokenKind_name = map[int32]string{
 		0: "TokenKind_Undefined",
 		1: "TokenKind_AccessToken",
+		2: "TokenKind_RefreshToken",
 		3: "TokenKind_PurposeToken",
 	}
 	TokenKind_value = map[string]int32{
 		"TokenKind_Undefined":    0,
 		"TokenKind_AccessToken":  1,
+		"TokenKind_RefreshToken": 2,
 		"TokenKind_PurposeToken": 3,
 	}
 )
@@ -71,70 +75,18 @@ func (TokenKind) EnumDescriptor() ([]byte, []int) {
 	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{0}
 }
 
-type Permission struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      string                 `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
-	Action        string                 `protobuf:"bytes,2,opt,name=action,proto3" json:"action,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Permission) Reset() {
-	*x = Permission{}
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Permission) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Permission) ProtoMessage() {}
-
-func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Permission.ProtoReflect.Descriptor instead.
-func (*Permission) Descriptor() ([]byte, []int) {
-	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Permission) GetResource() string {
-	if x != nil {
-		return x.Resource
-	}
-	return ""
-}
-
-func (x *Permission) GetAction() string {
-	if x != nil {
-		return x.Action
-	}
-	return ""
-}
-
 type Tenant struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Role          string                 `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	Tenant        string                 `protobuf:"bytes,2,opt,name=tenant,proto3" json:"tenant,omitempty"`
-	Permissions   []*Permission          `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions   []*v1.Permission       `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Tenant) Reset() {
 	*x = Tenant{}
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[1]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +98,7 @@ func (x *Tenant) String() string {
 func (*Tenant) ProtoMessage() {}
 
 func (x *Tenant) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[1]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +111,7 @@ func (x *Tenant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Tenant.ProtoReflect.Descriptor instead.
 func (*Tenant) Descriptor() ([]byte, []int) {
-	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{1}
+	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Tenant) GetRole() string {
@@ -176,7 +128,7 @@ func (x *Tenant) GetTenant() string {
 	return ""
 }
 
-func (x *Tenant) GetPermissions() []*Permission {
+func (x *Tenant) GetPermissions() []*v1.Permission {
 	if x != nil {
 		return x.Permissions
 	}
@@ -198,7 +150,7 @@ type Claims struct {
 
 func (x *Claims) Reset() {
 	*x = Claims{}
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[2]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -210,7 +162,7 @@ func (x *Claims) String() string {
 func (*Claims) ProtoMessage() {}
 
 func (x *Claims) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[2]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -223,7 +175,7 @@ func (x *Claims) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Claims.ProtoReflect.Descriptor instead.
 func (*Claims) Descriptor() ([]byte, []int) {
-	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{2}
+	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Claims) GetSub() string {
@@ -285,7 +237,7 @@ type Auth struct {
 
 func (x *Auth) Reset() {
 	*x = Auth{}
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[3]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -297,7 +249,7 @@ func (x *Auth) String() string {
 func (*Auth) ProtoMessage() {}
 
 func (x *Auth) ProtoReflect() protoreflect.Message {
-	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[3]
+	mi := &file_ose_micro_auth_v1_auth_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -310,7 +262,7 @@ func (x *Auth) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Auth.ProtoReflect.Descriptor instead.
 func (*Auth) Descriptor() ([]byte, []int) {
-	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{3}
+	return file_ose_micro_auth_v1_auth_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Auth) GetAccess() string {
@@ -331,15 +283,11 @@ var File_ose_micro_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_ose_micro_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x1cose/micro/auth/v1/auth.proto\x12\x11ose.micro.auth.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"@\n" +
-	"\n" +
-	"Permission\x12\x1a\n" +
-	"\bresource\x18\x01 \x01(\tR\bresource\x12\x16\n" +
-	"\x06action\x18\x02 \x01(\tR\x06action\"u\n" +
+	"\x1cose/micro/auth/v1/claims.proto\x12\x11ose.micro.auth.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a ose/micro/common/v1/common.proto\"w\n" +
 	"\x06Tenant\x12\x12\n" +
 	"\x04role\x18\x01 \x01(\tR\x04role\x12\x16\n" +
-	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12?\n" +
-	"\vpermissions\x18\x03 \x03(\v2\x1d.ose.micro.auth.v1.PermissionR\vpermissions\"\x9f\x02\n" +
+	"\x06tenant\x18\x02 \x01(\tR\x06tenant\x12A\n" +
+	"\vpermissions\x18\x03 \x03(\v2\x1f.ose.micro.common.v1.PermissionR\vpermissions\"\x9f\x02\n" +
 	"\x06Claims\x12\x10\n" +
 	"\x03sub\x18\x01 \x01(\tR\x03sub\x120\n" +
 	"\x04kind\x18\x02 \x01(\x0e2\x1c.ose.micro.auth.v1.TokenKindR\x04kind\x123\n" +
@@ -351,10 +299,11 @@ const file_ose_micro_auth_v1_auth_proto_rawDesc = "" +
 	"\tissued_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\bissuedAt\"8\n" +
 	"\x04Auth\x12\x16\n" +
 	"\x06access\x18\x01 \x01(\tR\x06access\x12\x18\n" +
-	"\arefresh\x18\x02 \x01(\tR\arefresh*[\n" +
+	"\arefresh\x18\x02 \x01(\tR\arefresh*w\n" +
 	"\tTokenKind\x12\x17\n" +
 	"\x13TokenKind_Undefined\x10\x00\x12\x19\n" +
 	"\x15TokenKind_AccessToken\x10\x01\x12\x1a\n" +
+	"\x16TokenKind_RefreshToken\x10\x02\x12\x1a\n" +
 	"\x16TokenKind_PurposeToken\x10\x03B\xc4\x01\n" +
 	"\x15com.ose.micro.auth.v1B\tAuthProtoP\x01Z9github.com/ose-micro/grpc/gen/go/ose/micro/auth/v1;authv1\xa2\x02\x03OMA\xaa\x02\x11Ose.Micro.Auth.V1\xca\x02\x11Ose\\Micro\\Auth\\V1\xe2\x02\x1dOse\\Micro\\Auth\\V1\\GPBMetadata\xea\x02\x14Ose::Micro::Auth::V1b\x06proto3"
 
@@ -371,19 +320,19 @@ func file_ose_micro_auth_v1_auth_proto_rawDescGZIP() []byte {
 }
 
 var file_ose_micro_auth_v1_auth_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_ose_micro_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_ose_micro_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_ose_micro_auth_v1_auth_proto_goTypes = []any{
 	(TokenKind)(0),                // 0: ose.micro.auth.v1.TokenKind
-	(*Permission)(nil),            // 1: ose.micro.auth.v1.Permission
-	(*Tenant)(nil),                // 2: ose.micro.auth.v1.Tenant
-	(*Claims)(nil),                // 3: ose.micro.auth.v1.Claims
-	(*Auth)(nil),                  // 4: ose.micro.auth.v1.Auth
+	(*Tenant)(nil),                // 1: ose.micro.auth.v1.Tenant
+	(*Claims)(nil),                // 2: ose.micro.auth.v1.Claims
+	(*Auth)(nil),                  // 3: ose.micro.auth.v1.Auth
+	(*v1.Permission)(nil),         // 4: ose.micro.common.v1.Permission
 	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
 var file_ose_micro_auth_v1_auth_proto_depIdxs = []int32{
-	1, // 0: ose.micro.auth.v1.Tenant.permissions:type_name -> ose.micro.auth.v1.Permission
+	4, // 0: ose.micro.auth.v1.Tenant.permissions:type_name -> ose.micro.common.v1.Permission
 	0, // 1: ose.micro.auth.v1.Claims.kind:type_name -> ose.micro.auth.v1.TokenKind
-	2, // 2: ose.micro.auth.v1.Claims.tenants:type_name -> ose.micro.auth.v1.Tenant
+	1, // 2: ose.micro.auth.v1.Claims.tenants:type_name -> ose.micro.auth.v1.Tenant
 	5, // 3: ose.micro.auth.v1.Claims.expires_at:type_name -> google.protobuf.Timestamp
 	5, // 4: ose.micro.auth.v1.Claims.issued_at:type_name -> google.protobuf.Timestamp
 	5, // [5:5] is the sub-list for method output_type
@@ -404,7 +353,7 @@ func file_ose_micro_auth_v1_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ose_micro_auth_v1_auth_proto_rawDesc), len(file_ose_micro_auth_v1_auth_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

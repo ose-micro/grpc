@@ -4,7 +4,7 @@ package ose.micro.common.v1;
 
 option go_package = "github.com/ose-micro/grpc/gen/go/ose/micro/common/v1;commonv1";
 
-message Location {
+message Address {
   string region = 1;
   string district = 2;
   string chiefdom = 3;
@@ -14,9 +14,4 @@ message Location {
 message Reference {
   string id = 1;
   map<string, string> metadata = 2;
-}
-
-message Permission {
-  string resource = 1;
-  string action = 2;
 }
