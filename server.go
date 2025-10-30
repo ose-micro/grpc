@@ -3,8 +3,6 @@ package grpc
 import (
 	"fmt"
 	"net"
-	"net/http"
-	"runtime"
 	"time"
 
 	"github.com/ose-micro/core/logger"
@@ -22,8 +20,6 @@ type Params struct {
 	StreamInterceptors []grpc.StreamServerInterceptor
 	Logger             logger.Logger
 	Tracer             tracing.Tracer
-	EnablePprof        bool // Optional: enable pprof
-	MonitorGoroutines  bool // Optional: monitor goroutine count
 }
 
 type Server struct {
@@ -69,14 +65,6 @@ func New(params Params) (*Server, error) {
 		log:        params.Logger,
 	}
 
-	if params.EnablePprof {
-		s.enablePprof()
-	}
-
-	if params.MonitorGoroutines {
-		s.monitorGoroutines()
-	}
-
 	return s, nil
 }
 
@@ -108,21 +96,4 @@ func (s *Server) Stop() error {
 
 func (s *Server) Instance() *grpc.Server {
 	return s.grpcServer
-}
-
-// Optional: Enable pprof server
-func (s *Server) enablePprof() {
-	go func() {
-		s.log.Info("pprof listening at http://localhost:6060/debug/pprof/")
-		_ = http.ListenAndServe("localhost:6060", nil)
-	}()
-}
-
-// Optional: Periodically logs number of active goroutines
-func (s *Server) monitorGoroutines() {
-	go func() {
-		for range time.Tick(10 * time.Second) {
-			s.log.Info("goroutine count", "count", runtime.NumGoroutine())
-		}
-	}()
 }
