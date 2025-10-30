@@ -30,8 +30,10 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/ose-micro/core v0.0.2
 	golang.org/x/net v0.37.0 // indirect
+	golang.org/x/sync v0.17.0
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/time v0.14.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250512202823-5a2f75b736a9 // indirect
 	google.golang.org/protobuf v1.36.6
 )

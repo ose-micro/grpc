@@ -14,5 +14,6 @@ func DefaultMiddlewares(logger *zap.Logger, tracer tracing.Tracer) []grpc.UnaryS
 		ose_grpc.WithTracing(tracer),
 		grpc_recovery.UnaryServerInterceptor(),
 		grpc_zap.UnaryServerInterceptor(logger),
+		RateLimitInterceptor(),
 	}
 }
