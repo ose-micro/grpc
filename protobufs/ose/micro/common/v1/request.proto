@@ -17,6 +17,7 @@ enum FilterOp {
   FILTER_OP_IN = 7;
   FILTER_OP_NIN = 8;
   FILTER_OP_REGEX = 9;
+  FILTER_OP_LIKE = 10;
 }
 
 enum AggregationType {

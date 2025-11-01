@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ose.micro.common.v1;
+
+option go_package = "github.com/ose-micro/grpc/gen/go/ose/micro/common/v1;commonv1";
+
+message Meta {
+  int32 total = 10;
+  int32 page = 20;
+  int32 limit = 30;
+  int32 totalPages = 40;
+  bool hasNext = 50;
+  bool hasPrev = 60;
+}
